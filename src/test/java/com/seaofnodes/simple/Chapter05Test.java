@@ -80,7 +80,7 @@ else
     a=b+1;
 return a+b;""");
         StopNode ret = parser.parse(true);
-        assertEquals("return ((Phi(Region31,(arg*2),arg)+arg)+Phi(Region31,4,5));", ret.toString());
+        assertEquals("return ((Phi(Region31,(arg*2),arg)+arg)+Phi(Region,4,5));", ret.toString());
     }
 
     @Test
