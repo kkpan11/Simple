@@ -4,20 +4,10 @@ import com.seaofnodes.simple.node.*;
 import com.seaofnodes.simple.type.TypeInteger;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import static org.junit.Assert.*;
 
 public class Chapter08Test {
-
-    @Test
-    @Ignore
-    public void testJig() {
-        Parser parser = new Parser("""
-// Insert test case here
-""");
-        StopNode stop = parser.parse(true);
-    }
 
     @Test
     public void testEx6() {
@@ -32,7 +22,7 @@ while(arg < 10) {
 }
 return arg;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Region36,Phi(Region25,Phi(Loop6,arg,(Phi_arg+1)),Add),Add);", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof RegionNode);
         Assert.assertEquals(5, GraphEvaluator.evaluate(stop, 1));
@@ -55,7 +45,7 @@ while(arg < 10) {
 }
 return a;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Loop7,1,Phi(Region42,Phi_a,(Phi_a+1)));", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof ProjNode);
         System.out.println(IRPrinter.prettyPrint(stop,99));
@@ -75,7 +65,7 @@ while(arg < 10) {
 }
 return arg;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Region34,Phi(Loop6,arg,(Phi_arg+1)),Add);", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof RegionNode);
     }
@@ -91,7 +81,7 @@ while(arg < 10) {
 }
 return arg;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Region25,Phi(Loop6,arg,(Phi_arg+1)),Add);", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof RegionNode);
     }
@@ -110,7 +100,7 @@ while(arg < 10) {
 }
 return arg;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Loop6,arg,(Phi_arg+1));", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof ProjNode);
     }
@@ -127,7 +117,7 @@ while(arg < 10) {
 }
 return arg;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Loop6,arg,(Phi_arg+1));", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof ProjNode);
     }
@@ -143,7 +133,7 @@ while( arg < 10 ) {
 }
 return arg;
                 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return arg;", stop.toString());
         System.out.println(IRPrinter.prettyPrint(stop,99));
     }
@@ -151,8 +141,8 @@ return arg;
     @Test
     public void testRegress2() {
         Parser parser = new Parser("if(1) return 0;  else while(arg>--arg) arg=arg+1; return 0;");
-        StopNode stop = parser.parse(true);
-        assertEquals("Stop[ return 0; return 0; ]", stop.toString());
+        StopNode stop = parser.parse().iterate(true);
+        assertEquals("return 0;", stop.toString());
     }
 
     @Test
@@ -179,7 +169,7 @@ while(arg < 10) {
 }
 return arg;
 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return arg;", stop.toString());
     }
 
@@ -196,7 +186,7 @@ while(arg < 10) {
 }
 return a;
 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return Phi(Region28,Phi(Loop7,1,(Phi_a+1)),Add);", stop.toString());
         assertTrue(stop.ret().ctrl() instanceof RegionNode);
     }
@@ -212,9 +202,9 @@ while(1) {
 }
 return a;
 """);
-        StopNode stop = parser.parse(true);
+        StopNode stop = parser.parse().iterate(true);
         assertEquals("return (Phi(Loop7,1,Add)+1);", stop.toString());
-        assertTrue(stop.ret().ctrl() instanceof RegionNode);
+        assertTrue(stop.ret().ctrl() instanceof ProjNode prj && prj._idx==1 );
     }
 
 }
