@@ -1,12 +1,7 @@
 package com.seaofnodes.simple;
 
-import com.seaofnodes.simple.node.Node;
 import com.seaofnodes.simple.node.StopNode;
-import com.seaofnodes.simple.type.*;
 import org.junit.Test;
-
-import java.util.Arrays;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -110,7 +105,7 @@ while (arg) {
 return bar.a;
 """);
         StopNode stop = parser.parse(false).iterate(true);
-        assertEquals("return Phi(Loop10,0,(Phi_a+2));", stop.toString());
+        assertEquals("return Phi(Loop11,0,(Phi_a+2));", stop.toString());
     }
 
     @Test
@@ -162,7 +157,7 @@ if( bar ) bar.a = 1;
 return bar;
 """);
         StopNode stop = parser.parse(false).iterate(true);
-        assertEquals("return Phi(Region15,null,new Bar);", stop.toString());
+        assertEquals("return Phi(Region16,null,new Bar);", stop.toString());
     }
 
     @Test
@@ -178,7 +173,7 @@ else bar.a = 1;
 return rez;
 """);
         StopNode stop = parser.parse(false).iterate(true);
-        assertEquals("return Phi(Region32,4,3);", stop.toString());
+        assertEquals("return Phi(Region33,4,3);", stop.toString());
     }
 
     @Test
@@ -195,7 +190,8 @@ while(arg) {
 return ret;
 """);
         try { parser.parse(true).iterate(true); fail(); }
-        catch( Exception e ) { assertEquals("Might be null accessing 'v0'", e.getMessage()); }
+        catch( Exception e ) {
+            assertEquals("Might be null accessing 'v0'", e.getMessage()); }
     }
 
     @Test
@@ -231,7 +227,7 @@ while( i.x < i.len ) {
 return sum;
 """);
         StopNode stop = parser.parse().iterate(true);
-        assertEquals("return Phi(Loop14,0,(Phi(Loop,0,(Phi_x+1))+Phi_sum));", stop.toString());
+        assertEquals("return Phi(Loop15,0,(Phi(Loop,0,(Phi_x+1))+Phi_sum));", stop.toString());
     }
 
 
@@ -253,7 +249,7 @@ return ret;
 """);
         StopNode stop = parser.parse(true).iterate(true);
         System.out.println(IRPrinter.prettyPrint(stop, 99, true));
-        assertEquals("return Phi(Loop10,new s0,Phi(Region31,new s0,Phi_ret));", stop.toString());
+        assertEquals("return Phi(Loop11,new s0,Phi(Region31,new s0,Phi_ret));", stop.toString());
     }
 
     @Test
@@ -290,7 +286,7 @@ return ret;
 """);
         StopNode stop = parser.parse(true).iterate(true);
         System.out.println(IRPrinter.prettyPrint(stop, 99, true));
-        assertEquals("return Phi(Loop10,new s0,Phi(Region30,new s0,Phi_ret));", stop.toString());
+        assertEquals("return Phi(Loop11,new s0,Phi(Region30,new s0,Phi_ret));", stop.toString());
     }
 
     @Test
@@ -320,7 +316,7 @@ if(0) {
 }
    """);
         StopNode stop = parser.parse(true).iterate(true);
-        assertEquals("Stop[ ]", stop.toString());
+        assertEquals("return 0;", stop.toString());
     }
 
     @Test
@@ -394,7 +390,7 @@ while(0) {}
 }
 """);
         StopNode stop = parser.parse().iterate(true);
-        assertEquals("Stop[ ]", stop.toString());
+        assertEquals("return 0;", stop.toString());
     }
 
     @Test
