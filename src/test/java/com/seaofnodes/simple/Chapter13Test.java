@@ -101,7 +101,7 @@ n.next = new N;
 return n.next;
 """);
         StopNode stop = parser.parse(false).iterate(false);
-        assertEquals("return new N;", stop.toString());
+        assertEquals("return N;", stop.toString());
     }
 
     @Test
@@ -161,6 +161,6 @@ struct S2 { int x; }
 return new S1.s=new S2;
 """);
         StopNode stop = parser.parse(false).iterate(false);
-        assertEquals("return new S1;", stop.toString());
+        assertEquals("return S2;", stop.toString());
     }
 }
